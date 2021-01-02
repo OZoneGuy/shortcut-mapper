@@ -35,8 +35,9 @@ KeyMapNode *load_key_map(string &file_name) {
 
     // Register master hotkey
     if (keys == "Master:") {
-      Display *dpy;
       iss >> keys;
+
+      Display *dpy;
       int i = 0;
       unsigned int mods = 0;
       char code = '\0';
