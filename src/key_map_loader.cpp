@@ -78,7 +78,12 @@ KeyMapNode *load_key_map(string &file_name) {
         code = 'k';
         mods = ControlMask | Mod4Mask;
       }
-      XGrabKey(dpy, code, mods, DefaultRootWindow(dpy), 0, GrabModeAsync, GrabModeAsync);
+      if (NULL == (dpy = XOpenDisplay(0))) {
+        write_log(LOG_ERR, "Failed to acquire display.");
+        exit(1);
+      }
+      XGrabKey(dpy, keycode_from_string(dpy, std::to_string(code)), mods,
+               DefaultRootWindow(dpy), 0, GrabModeAsync, GrabModeAsync);
       continue;
     }
 
