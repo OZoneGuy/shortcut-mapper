@@ -1,0 +1,195 @@
+* Requirements
+** Functional Requirements
+*** Must have
+    1. Must load key binds from a file
+    2. Must be able to execute shell commands as shortcut commands
+    3. Provide a key map interface, where actions are described by a 'string' or series of key presses
+    4. Must work on X Server on Linux
+    5. Commands must no be invoked without user's intent
+    6. User must be able to quit and/or cancel shortcut attempt without executing any action
+    7. User must be able to invoke commands from anywhere in the system
+    8. All commands must have a unique key string
+    9. Must detect non-unique key strings on key map import
+    10. Must warn user about non-unique key strings
+    11. Must indicate which key strings are conflicting, or non-unique
+    12. When entering key strings, key strings must not be detected by other applications
+
+
+    If you are confused, checkout Spacemacs' shortcut system. It is basically what I want to emulate system wide.
+*** Nice to have
+    1. Decouple the input such that it is easier to port to other systems
+    2. Allow for ~sudo~ commands
+    3. Show a UI only when accepting key strings
+    4. Must provide a way to reload key map without restarting the application
+
+** Non-functional Requirements
+   * Must respond to key presses/commands within 0.5 second
+
+* Design
+  * Store key string in file with the format ~"key-string" command~ where ~key-string~ is some key string such as ~aee~, this represents typing ~a~ then ~e~ then ~e~, surrounded by ~""~ and ~command~ is some shell command to be executed.
+
+  * Will require some data type to keep track of keymap in memory.
+
+    Perhaps some sort of tree to store key map
+
+** Use cases
+
+*** Diagram
+    #+begin_src plantuml :file diags/use-cases.png :results none file
+      @startuml
+      left to right direction
+
+      actor User as U
+      actor "Other Programs" as o_prgm
+      actor "Linux/OS" as os
+
+      rectangle "Key Mapper"{
+              usecase (Start Program) as start
+              usecase (Start key String) as strt_str
+              usecase (Enter Keypress) as keyprss
+              usecase (Cancel) as cncl
+              usecase (Invoke Command) as cmd
+              usecase (Load Key map) as ld_kmp
+      }
+
+      U -- start
+      U -- keyprss
+      U -- cncl
+      U -- strt_str
+
+      start ..> ld_kmp : <includes>
+
+      strt_str --- o_prgm
+      strt_str --- os
+
+      keyprss ..> cmd : <includes>
+      keyprss <. cncl : <extends>
+
+      @enduml
+    #+end_src
+
+    [[file:diags/use-cases.png]]
+
+*** Start Program
+    :PROPERTIES:
+    :CUSTOM_ID: UC-1-start-program
+    :END:
+
+    * *Primary Actor:* User
+    * *Supporting Actors:* OS
+    * *Preconditions:* Launching on XServer
+    * *Trigger:* Program execution, launching the program
+    * *Main Scenario:*
+      1. User starts the software
+      2. Load Key Map, see [[#UC-2-load-key-map][Load Key Map]] for behaviour
+      3. Continue running in the background
+      4. Watch for master shortcut
+
+*** Load Key Map
+    :PROPERTIES:
+    :CUSTOM_ID: UC-2-load-key-map
+    :END:
+    * *Primary Actor:* Software/System
+    * *Supporting Actors:* OS
+    * *Preconditions:*
+      * The software is running
+      * A file path is provided
+      * The software is allowed to read and write the given file path
+    * *Trigger:* Program execution, or reloading key map(User generated event)
+    * *Main Scenario:*
+      1. Open and read file at given file path
+      2. Read data in the file to build the key map tree
+      3. Close file
+    * *Secondary Scenarios:*
+      * *1.1* File does not exist
+        1. Write to log message about conflicting file
+        2. Use default key strings and commands
+      * *2.1* There are conflicting key strings
+        1. Do not load conflicting key strings and unload any that are already loaded and registered
+        2. Write to log conflicting key strings
+           1. Message should contain the conflicting key strings and the commands associated with the key strings
+        3. Continue loading key strings
+      * *2.2* The data is in an unsupported format
+        1. Print the line number where the parse error happened
+        2. Continue parsing next line
+
+*** Start Key String
+    * *Primary Actor:* User
+    * *Supporting Actors:* OS, XServer
+    * *Preconditions:* Program is running, Start key is defined
+    * *Trigger:* The user presses predefined shortcut
+    * *Main Scenario:*
+      1. Grab keyboard from system
+      2. Listen for any key presses, see [[#UC-4-type-key][Enter Key press]]
+*** Enter Key press
+    :PROPERTIES:
+    :CUSTOM_ID: UC-4-type-key
+    :END:
+    * *Primary Actor:* User
+    * *Supporting Actors:* OS/ XServer
+    * *Preconditions:* The program is running, start key string is entered
+    * *Trigger:* The user presses a key on the keyboard
+    * *Main Scenario:*
+      1. User presses key
+      2. Key is compared with currently available key presses options in the string
+      3. Execute available command
+      4. Listen for next key press
+    * *Secondary Scenarios:*
+      * *2.1* Key string entered is not defined
+        1. Go to [[#UC-5-cancel][Cancel]]
+      * *3.1* There is no command to execute
+        1. Do not execute any command and move to step 4
+      * *4.1* There are no available key options
+        1. Go to [[*Cancel][Cancel]]
+
+*** Cancel
+    :PROPERTIES:
+    :CUSTOM_ID: UC-5-cancel
+    :END:
+    * *Primary Actor:* User
+    * *Supporting Actors:* OS, XServer
+    * *Preconditions:* The program is running, start key string is entered
+    * *Trigger:* Pressed cancel key, predefined
+    * *Main Scenario:*
+      1. Stop listening to key presses
+      2. Release the keyboard back to the system
+
+*** Invoke Command                                                      :WIP:
+    :PROPERTIES:
+    :CUSTOM_ID: UC-6-invk-cmd
+    :END:
+    * *Primary Actor:* User
+    * *Supporting Actors:* OS, XServer
+    * *Preconditions:*
+    * *Trigger:*
+    * *Main Scenario:*
+
+
+** UML Diagram
+
+   An UML diagram is not necessary for this project, it doesn't rely much on OOP. But I needed a way to represent the tree key map tree, so this exists.
+
+   #+begin_src plantuml :file diags/uml.png :exports results :results none file
+     @startuml
+
+     class KeyMapNode {
+             {field} - List<*KeyMapNode> nextKeys
+             {field} - char key
+             {field} - boolean hasCmd
+             {field} - String cmd
+
+             {method} + *KeyMapNode get(char key)
+             {method} + void execute()
+             {method} void add(char key, String cmd)
+             {method} boolean operator==(char)
+     }
+
+     note right of KeyMapNode::operator==
+     This is used to check if the given
+     character mathes the node's character
+     end note
+
+     @enduml
+   #+end_src
+
+   [[file:diags/uml.png]]
