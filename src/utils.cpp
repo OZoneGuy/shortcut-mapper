@@ -15,3 +15,7 @@ KeyCode keycode_from_string(Display *dpy, const std::string &key){
 char char_from_keycode(const XEvent &ev){
   return XKeysymToString(XLookupKeysym((XKeyEvent *)&ev, 0))[0];
 }
+
+string str_from_key_code(const XEvent &ev) {
+  return XKeysymToString(XLookupKeysym((XKeyEvent *)&ev, 0));
+}

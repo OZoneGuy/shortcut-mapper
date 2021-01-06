@@ -9,3 +9,5 @@ void write_log(int priority, const std::string &msg);
 KeyCode keycode_from_string(Display *dpy, const std::string& key);
 
 char char_from_keycode(const XEvent &ev);
+
+std::string str_from_key_code(const XEvent &ev);
