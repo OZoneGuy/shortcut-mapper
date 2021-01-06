@@ -99,3 +99,74 @@ KeyMapNode *load_key_map(string &file_name) {
   }
   return key_map;
 }
+
+void grab_master(std::string keys) {
+  Display *dpy;
+
+  int i = 0;
+  unsigned int mods = 0;
+  char code = '\0';
+  bool failed = false;
+
+  // Get display
+  if (NULL == (dpy = XOpenDisplay(0))) {
+    write_log(LOG_ERR, "Failed to acquire display.");
+    exit(1);
+  }
+
+  // Read and parse key bind
+  while (i < keys.size()){
+
+    // there is only one character (remaining)
+    if (i == keys.size() - 1) {
+      code = keys[i];
+      break;
+    }
+
+    // Control Key modifier
+    if (keys[i] == 'C') {
+      if (i + 2 < keys.size() && keys[i + 1] == '-') {
+        mods |= ControlMask;
+        i += 2;
+      } else {
+        failed = true;
+        break;
+      }
+    }
+
+    // Alt key modifier
+    if (keys[i] == 'A') {
+      if (i + 2 < keys.size() && keys[i + 1] == '-') {
+        mods |= Mod1Mask;
+        i += 2;
+      } else {
+        failed = true;
+        break;
+      }
+    }
+
+    // Super (Windows) key modifier
+    if (keys[i] == 'S') {
+      if (i + 2 < keys.size() && keys[i + 1] == '-') {
+        mods |= Mod4Mask;
+        i += 2;
+      } else {
+        failed = true;
+        break;
+      }
+    }
+  }
+
+  // Failed to parse the key, defaulting master key to C-S-k (Control+Super+k)
+  if (failed) {
+    write_log(LOG_WARNING,
+              string("Bad Master Key at character: ") + std::to_string(i) +
+              string("\tDefaulting to C-S-k."));
+    code = 'k';
+    mods = ControlMask | Mod4Mask;
+  }
+
+  // Grab key bind
+  XGrabKey(dpy, keycode_from_string(dpy, string(1, code)), mods,
+           DefaultRootWindow(dpy), 0, GrabModeAsync, GrabModeAsync);
+}
