@@ -30,6 +30,7 @@ public:
   bool has(const char &key);
   void add(const std::string &keyString, const std::string &cmd);
   KeyMapNode* get(const char &key);
+  const bool empty() { return nextKeys.empty();}
 
 
   bool operator==(const char& key) const {
