@@ -35,7 +35,7 @@
 ** Use cases
 
 *** Diagram
-    #+begin_src plantuml :file diags/use-cases.png :results none file
+    #+begin_src plantuml :file diags/use-cases.png :exports none :results none file
       @startuml
       left to right direction
 
