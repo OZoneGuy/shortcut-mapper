@@ -34,22 +34,22 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < argc; i++) {
       if (strcmp(argv[i], "-h")) {
         // print help
-        cout << "Usage:" << endl
-             << "\t"
-             << "-c FILE_NAME"
-             << "\t"
-             << "Specify config file location. Uses $XDG_CONFIG_HOME, if set. "
-                "If it is not set, then use ~/.config/key_mapper/codes"
-             << "\n"
-             << "\t"
-             << "-l FILE_NAME"
-             << "\t"
-             << "Specify log file location. Defaults to /var/log/?"
-             << "\n"
-             << "\t"
-             << "-h"
-             << "\t\t"
-             << "Print this help message." << endl;
+        cout
+            << "Usage:" << endl
+            << "\t"
+            << "-c FILE_NAME"
+            << "\t"
+            << R"(Specify config file location. Defaults to "$HOME/.config/key_mapper/key_map", or "$XDG_CONFIG_HOME/key_mapper/key_map" if 'XDG_CONFIG_HOME' is set.)"
+            << "\n"
+            << "\t"
+            << "-l FILE_NAME"
+            << "\t"
+            << "Specify log file location. Defaults to /var/log/?"
+            << "\n"
+            << "\t"
+            << "-h"
+            << "\t\t"
+            << "Print this help message." << endl;
         exit(0);
       } else if (strcmp(argv[i], "-c")) {
         i++;
