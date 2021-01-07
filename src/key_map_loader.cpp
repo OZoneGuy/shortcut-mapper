@@ -101,7 +101,7 @@ void grab_master(std::string keys) {
     }
 
     // Alt key modifier
-    if (keys[i] == 'A') {
+    if (keys[i] == 'M') {
       if (i + 2 < keys.size() && keys[i + 1] == '-') {
         mods |= Mod1Mask;
         i += 2;
