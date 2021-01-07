@@ -75,9 +75,9 @@ int main(int argc, char *argv[]) {
     char *XDG_CONF =
         getenv("XDG_CONFIG_HOME"); // Get the default config location
     if (XDG_CONF == NULL) // 'XDG_CONFIG_HOME' is not set, use default location
-      config_file = string(getenv("HOME")) + "/.config/key_mapper/key_maps";
+      config_file = string(getenv("HOME")) + "/.config/key_mapper/key_map";
     else
-      config_file = string(XDG_CONF) + "key_mapper/key_maps";
+      config_file = string(XDG_CONF) + "key_mapper/key_map";
   }
 
   keyMapTree = load_key_map(config_file); // Load key map
