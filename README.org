@@ -1,8 +1,4 @@
-#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:{} arch:headline author:t
-#+options: broken-links:nil c:nil creator:nil d:(not "LOGBOOK") date:nil e:t
-#+options: email:nil f:t inline:t num:t p:nil pri:nil prop:nil stat:t tags:t
-#+options: tasks:t tex:t timestamp:t title:t toc:nil todo:nil |:t
-#+title: Key Mapper
+#+title: Shortcut Mapper
 #+date: <2021-01-06 Wed>
 #+author:
 #+email: omar@ARCH
