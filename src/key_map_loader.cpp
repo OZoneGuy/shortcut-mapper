@@ -9,11 +9,13 @@
 #include <stdexcept>
 #include <string>
 #include <sys/syslog.h>
+#include <filesystem>
 #include <syslog.h>
 
 using std::invalid_argument;
 using std::istringstream;
 using std::string;
+namespace fs = std::filesystem;
 
 KeyMapNode *load_key_map(string &file_name, char &code, unsigned &mods) {
   std::ifstream file(file_name);
@@ -21,8 +23,16 @@ KeyMapNode *load_key_map(string &file_name, char &code, unsigned &mods) {
   // Try opening file
   if (!file.is_open()) {
     // Log failure to open file
-    write_log(LOG_ERR, string("Could not open file at: ") + file_name);
-    return nullptr;
+    write_log(LOG_ERR, "Could not open file at: " + file_name + ". Copying template file.");
+
+    // Create directory
+    fs::create_directory(fs::path(file_name).parent_path());
+
+    // copy template to file location
+    fs::copy_file(KEY_MAP_TEMPLATE, file_name);
+
+    // reopen file
+    file.open(file_name);
   }
 
   string line;
