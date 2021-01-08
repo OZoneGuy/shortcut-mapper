@@ -80,7 +80,9 @@ int main(int argc, char *argv[]) {
       config_file = string(XDG_CONF) + "key_mapper/key_map";
   }
 
-  keyMapTree = load_key_map(config_file); // Load key map
+  char code;
+  unsigned mods;
+  keyMapTree = load_key_map(config_file, code, mods); // Load key map
   if (keyMapTree == nullptr ||
       keyMapTree->empty()) { // Check for empty config or failed load
     write_log(LOG_WARNING, "Empty key map");
@@ -89,6 +91,8 @@ int main(int argc, char *argv[]) {
 
   ////////////////////////////// Listen to events //////////////////////////////
   // Listen to master key bind
+  XGrabKey(dpy, keycode_from_string(dpy, string(1, code)), mods,
+           DefaultRootWindow(dpy), 0, GrabModeAsync, GrabModeAsync);
   while (true) {
     XNextEvent(dpy, &ev);
     switch (ev.type) {

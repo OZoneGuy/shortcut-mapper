@@ -15,7 +15,7 @@ using std::invalid_argument;
 using std::istringstream;
 using std::string;
 
-KeyMapNode *load_key_map(string &file_name) {
+KeyMapNode *load_key_map(string &file_name, char &code, unsigned &mods) {
   std::ifstream file(file_name);
 
   // Try opening file
@@ -44,7 +44,7 @@ KeyMapNode *load_key_map(string &file_name) {
     if (keys == "Master:") {
       iss >> keys; // Store the master key bind
 
-      grab_master(keys); // grab the key bind
+      grab_master(keys, code, mods); // grab the key bind
       continue;
     }
 
@@ -66,12 +66,11 @@ KeyMapNode *load_key_map(string &file_name) {
   return key_map;
 }
 
-void grab_master(std::string keys) {
+void grab_master(std::string keys, char &code, unsigned int &mods) {
   Display *dpy;
-
   int i = 0;
-  unsigned int mods = 0;
-  char code = '\0';
+  code = 0;
+  mods = 0;
   bool failed = false;
 
   // Get display
@@ -131,8 +130,4 @@ void grab_master(std::string keys) {
     code = 'k';
     mods = ControlMask | Mod4Mask;
   }
-
-  // Grab key bind
-  XGrabKey(dpy, keycode_from_string(dpy, string(1, code)), mods,
-           DefaultRootWindow(dpy), 0, GrabModeAsync, GrabModeAsync);
 }
