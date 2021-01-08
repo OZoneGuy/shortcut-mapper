@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.17)
 project(shortcut-mapper VERSION 0.1)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 ################################ Project files #################################
 find_package(X11 REQUIRED)
 link_libraries(${X11_LIBRARIES})
