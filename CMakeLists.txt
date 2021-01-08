@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.17)
-project(kay-mapper VERSION 0.1)
+project(key-mapper VERSION 0.1)
 
 # ############################ Set up 'clip' library #############################
 
@@ -14,6 +14,9 @@ project(kay-mapper VERSION 0.1)
 # add_subdirectory(clip)
 
 ################################ Project files #################################
-add_subdirectory(src)
+find_package(X11 REQUIRED)
+link_libraries(${X11_LIBRARIES})
+include_directories(${X11_INCLUDE_DIRS})
 
-# add_subdirectory(tests)
+set(SOURCE src/key_mapper.cpp src/key_map_loader.cpp src/key_map_node.cpp src/utils.cpp)
+add_executable(key-mapper ${SOURCE})
