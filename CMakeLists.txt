@@ -12,3 +12,6 @@ include_directories(${X11_INCLUDE_DIRS})
 
 set(SOURCE src/key_mapper.cpp src/key_map_loader.cpp src/key_map_node.cpp src/utils.cpp)
 add_executable(${PROJECT_NAME} ${SOURCE})
+
+install(TARGETS ${PROJECT_NAME}
+  RUNTIME DESTINATION /bin/)
