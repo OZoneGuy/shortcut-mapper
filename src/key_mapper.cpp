@@ -54,14 +54,11 @@ int main(int argc, char *argv[]) {
       } else if (strcmp(argv[i], "-c")) {
         i++;
         config_file = argv[i];
-      } else if (strcmp(argv[i], "-l")) {
-        i++;
-        log_file = argv[i];
       }
     }
 
   //////////////////////////////  Initialisation  //////////////////////////////
-  openlog("key_mapper", LOG_CONS | LOG_PID, LOG_USER);
+  openlog("shortcut-mapper", LOG_CONS | LOG_PID, LOG_USER);
 
   // initialise display
   if (NULL == (dpy = XOpenDisplay(0))) {
