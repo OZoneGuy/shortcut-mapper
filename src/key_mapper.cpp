@@ -75,9 +75,9 @@ int main(int argc, char *argv[]) {
     char *XDG_CONF =
         getenv("XDG_CONFIG_HOME"); // Get the default config location
     if (XDG_CONF == NULL) // 'XDG_CONFIG_HOME' is not set, use default location
-      config_file = string(getenv("HOME")) + "/.config/key_mapper/key_map";
+      config_file = string(getenv("HOME")) + "/.config/shortcut-mapper/key-map";
     else
-      config_file = string(XDG_CONF) + "key_mapper/key_map";
+      config_file = string(XDG_CONF) + "shortcut-mapper/key-map";
   }
 
   char code;
