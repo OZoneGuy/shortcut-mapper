@@ -49,3 +49,5 @@ Install `shortcut-mapper-git` from AUR
     Masks like <kbd> Ctrl </kbd> or <kbd> Alt </kbd>.
 
 -   [ ] Support using shift
+
+-   [ ] Terminate when loading key map if the `Master` key bind is unavailable
