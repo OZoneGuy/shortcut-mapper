@@ -51,3 +51,5 @@ Install `shortcut-mapper-git` from AUR
 -   [ ] Support using shift
 
 -   [ ] Terminate when loading key map if the `Master` key bind is unavailable
+
+-   [ ] Log to system log and to a file in `/var/log`

@@ -50,3 +50,5 @@ A program that runs in the background to provide a different way to execute shor
   * [ ] Support using shift
 
   * [ ] Terminate when loading key map if the =Master= key bind is unavailable
+
+  * [ ] Log to system log and to a file in =/var/log=
