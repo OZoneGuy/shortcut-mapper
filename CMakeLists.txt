@@ -18,4 +18,4 @@ install(TARGETS ${PROJECT_NAME}
 
 install(DIRECTORY DESTINATION /usr/share/shortcut-mapper/)
 install(FILES template/key-map
-  DESTINATION /usr/share/shortcut-mapper/key-map)
+  DESTINATION /usr/share/shortcut-mapper)
