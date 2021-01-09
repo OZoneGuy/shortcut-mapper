@@ -15,3 +15,6 @@ add_executable(${PROJECT_NAME} ${SOURCE})
 
 install(TARGETS ${PROJECT_NAME}
   RUNTIME DESTINATION /bin/)
+
+install(FILES template/key-map
+  DESTINATION /usr/share/shortcut-mapper/key-map)
