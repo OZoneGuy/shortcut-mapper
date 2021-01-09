@@ -67,11 +67,12 @@ int main(int argc, char *argv[]) {
   }
 
   ////////////////////////////////  Load Keys //////////////////////////////////
-  if (config_file
-          .empty()) { // config file has not been specified using '-c' option
-    char *XDG_CONF =
-        getenv("XDG_CONFIG_HOME"); // Get the default config location
-    if (XDG_CONF == NULL) // 'XDG_CONFIG_HOME' is not set, use default location
+  // config file has not been specified using '-c' option
+  if (config_file.empty()) {
+    // Get the default config location
+    char *XDG_CONF = getenv("XDG_CONFIG_HOME");
+    // 'XDG_CONFIG_HOME' is not set, use default location
+    if (XDG_CONF == NULL)
       config_file = string(getenv("HOME")) + "/.config/shortcut-mapper/key-map";
     else
       config_file = string(XDG_CONF) + "shortcut-mapper/key-map";
@@ -79,9 +80,11 @@ int main(int argc, char *argv[]) {
 
   char code;
   unsigned mods;
-  keyMapTree = load_key_map(config_file, code, mods); // Load key map
-  if (keyMapTree == nullptr ||
-      keyMapTree->empty()) { // Check for empty config or failed load
+  // Load key map
+  keyMapTree = load_key_map(config_file, code, mods);
+
+  // Check for empty config or failed load
+  if (keyMapTree == nullptr || keyMapTree->empty()) {
     write_log(LOG_WARNING, "Empty key map");
     return 0;
   }
@@ -114,7 +117,8 @@ void handle_keyboard(KeyMapNode *keyMap) {
   while (cont) {
     XNextEvent(dpy, &ev);
     switch (ev.type) {
-    case KeyPress: // get key press
+      // get key press
+    case KeyPress:
 
       // if user presses escape, stop listening and release keyboard
       if (keycode_from_string(dpy, "Escape") == ev.xkey.keycode) {
@@ -130,15 +134,17 @@ void handle_keyboard(KeyMapNode *keyMap) {
 
         // if it has a command, execute command
         if (curNode->hasCmd)
-          system(("setsid -f " + curNode->cmd)
-                     .c_str()); // execute shell command as a new process
-        if (curNode->empty())   // if there are no more possible keys, stop
+          // execute shell command as a new process
+          system(("setsid -f " + curNode->cmd).c_str());
+        // if there are no more possible keys, stop
+        if (curNode->empty())
           cont = false;
       } else {
         cont = false;
       }
       break;
-    case Expose: // Honestly, not sure. This was advised by SO
+      // Honestly, not sure. This was advised by SO
+    case Expose:
       while (XCheckTypedEvent(dpy, Expose, &ev)) /* empty body */
         ;
       break;

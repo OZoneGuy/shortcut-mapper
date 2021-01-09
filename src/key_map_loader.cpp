@@ -4,12 +4,12 @@
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <cstdlib>
+#include <filesystem>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
 #include <string>
 #include <sys/syslog.h>
-#include <filesystem>
 #include <syslog.h>
 
 using std::invalid_argument;
@@ -23,7 +23,8 @@ KeyMapNode *load_key_map(string &file_name, char &code, unsigned &mods) {
   // Try opening file
   if (!file.is_open()) {
     // Log failure to open file
-    write_log(LOG_ERR, "Could not open file at: " + file_name + ". Copying template file.");
+    write_log(LOG_ERR, "Could not open file at: " + file_name +
+                           ". Copying template file.");
 
     // Create directory
     fs::create_directory(fs::path(file_name).parent_path());
@@ -40,30 +41,39 @@ KeyMapNode *load_key_map(string &file_name, char &code, unsigned &mods) {
       '\0'); // Root node, has no commands and cannot be activated
 
   while (getline(file, line)) {
-    if (line == "") // empty line, skip
+    // empty line, skip
+    if (line == "")
       continue;
 
-    string keys; // holds the first non space terminated string, usually holds
-                 // the key string
+    // holds the first non space terminated string, usually holds
+    // the key string
+    string keys;
     istringstream iss(line);
     iss >> keys;
-    if (keys[0] == '#') // commented line
+
+    // commented line
+    if (keys[0] == '#')
       continue;
 
     // Register master hotkey
     if (keys == "Master:") {
-      iss >> keys; // Store the master key bind
+      // Store the master key bind
+      iss >> keys;
 
-      grab_master(keys, code, mods); // grab the key bind
+      // grab the key bind
+      grab_master(keys, code, mods);
       continue;
     }
 
     // register key string
     string cmd;
-    getline(iss, cmd);   // get the remainder of the line
-    cmd = cmd.substr(1); // remove first character, it is a space
+    // get the remainder of the line
+    getline(iss, cmd);
+    // remove first character, it is a space
+    cmd = cmd.substr(1);
     try {
-      key_map->add(keys, cmd); // try adding the command to the key tree
+      // try adding the command to the key tree
+      key_map->add(keys, cmd);
     } catch (const invalid_argument &error) {
       write_log(LOG_ERR, error.what());
     }
