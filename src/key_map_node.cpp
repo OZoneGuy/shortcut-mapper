@@ -21,7 +21,16 @@ void KeyMapNode::add(const string &keySeq, const string &cmd) {
   if (keySeq.size() == 1) {
     if (has(keySeq[0]))
       throw invalid_argument("Key string command already defined");
-    nextKeys.emplace(keySeq[0], new KeyMapNode(keySeq[0], cmd));
+    else {
+      auto search = nextKeys.find(keySeq[0]);
+      if (search == nextKeys.end())
+        nextKeys.emplace(keySeq[0], new KeyMapNode(keySeq[0], cmd));
+      else {
+        KeyMapNode *node = search->second;
+        node->cmd = cmd;
+        node->hasCmd = true;
+      }
+    }
   } else {
     auto search = nextKeys.find(keySeq[0]);
     if (search == nextKeys.end()) {
@@ -42,3 +51,7 @@ KeyMapNode* KeyMapNode::get(const char &key) {
   else
     return search->second;
 }
+
+bool KeyMapNode::has_cmd() const { return hasCmd; }
+
+string KeyMapNode::get_cmd() const { return cmd; }

@@ -133,9 +133,9 @@ void handle_keyboard(KeyMapNode *keyMap) {
       if (curNode != nullptr) {
 
         // if it has a command, execute command
-        if (curNode->hasCmd)
+        if (curNode->has_cmd())
           // execute shell command as a new process
-          system(("setsid -f " + curNode->cmd).c_str());
+          system(("setsid -f " + curNode->get_cmd()).c_str());
         // if there are no more possible keys, stop
         if (curNode->empty())
           cont = false;

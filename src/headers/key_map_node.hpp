@@ -18,16 +18,16 @@ private:
    * The key of this node.
    */
   const char key;
-
-public:
   /**
    * Shows whether or not this node is a command node/has a command
    */
-  const bool hasCmd;
+  bool hasCmd;
   /**
    * The command associated with the node, could be NULL/empty.
    */
-  const std::string cmd;
+  std::string cmd;
+
+public:
 
   /**
    * @brief      KeyMapNode constructor without a command
@@ -50,6 +50,10 @@ public:
    * @return     KeyMapNode
    */
   KeyMapNode(const char &key, const std::string &cmd);
+
+  bool has_cmd() const;
+
+  std::string get_cmd() const;
 
   /**
    * @brief      Returns true if the next 'key' sequence has a command
