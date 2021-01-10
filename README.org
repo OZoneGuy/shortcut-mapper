@@ -1,11 +1,15 @@
 #+title: Shortcut Mapper
-#+date: <2021-01-06 Wed>
-#+author:
-#+email: omar@ARCH
+#+author: Omar Alkersh (OZoneGuy)
+#+email: oalkersh@protonmail.com
 #+language: en
 #+select_tags: export
 #+exclude_tags: noexport
 #+creator: Emacs 27.1 (Org mode 9.4)
+
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:{} arch:headline author:t
+#+options: broken-links:nil c:nil creator:nil d:(not "LOGBOOK") date:nil e:t
+#+options: email:t f:t inline:t num:t p:nil pri:nil prop:nil stat:t tags:t
+#+options: tasks:t tex:t timestamp:t title:t toc:t todo:nil |:t
 
 A program that runs in the background to provide a different way to execute shortcuts. This program utilises key press sequences, following a master key bind, to execute different shell commands. This is meant for shortcuts and not key binds, such as volume up.
 
