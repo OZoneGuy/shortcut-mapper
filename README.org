@@ -30,7 +30,7 @@ A program that runs in the background to provide a different way to execute shor
 
    Conflicting key string will be reported in the system log. Only the first conflicting key string will be registered.
 * Installation
-** TODO Arch Linux
+** Arch Linux
 
    Install =shortcut-mapper-git= from AUR
 ** Git
